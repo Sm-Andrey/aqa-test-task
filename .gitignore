@@ -52,4 +52,4 @@ build/
 /*/allure-results/
 allure-report/
 
-.jar
+internal-0.0.1-SNAPSHOT.jar
