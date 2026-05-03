@@ -1,5 +1,6 @@
 package com.aqa.tests;
 
+import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -9,51 +10,54 @@ import org.junit.jupiter.api.Test;
 
 import static com.aqa.clients.AppClient.preparationRequest;
 import static com.aqa.clients.AppClient.preparationRequestWithGET;
-import static com.aqa.clients.WireMockClient.stubAuthSuccess;
 import static com.aqa.data.TestData.LOGIN;
 import static com.aqa.data.TestData.VALID_TOKEN;
+import static io.qameta.allure.Allure.step;
 import static org.hamcrest.Matchers.equalTo;
 
-@Epic("Дополнительные проверки")
+@Epic("Дополнительные проверки.")
 @Feature("COMMON")
 public class CommonTests extends BaseTest {
 
     @Test
-    @DisplayName("TC1: Запрос без обязательного параметра action")
+    @DisplayName("TC1: Запрос без обязательного параметра action.")
     @Severity(SeverityLevel.BLOCKER)
+    @Description("Система не обрабатывает запрос, если не указан тип действия (action).")
     public void testFailLoginWithoutAction() {
 
-        stubAuthSuccess(VALID_TOKEN);
-
-        preparationRequest(VALID_TOKEN, "")
-                .then()
-                .statusCode(400)
-                .body("result", equalTo("ERROR"));
+        step("Пользователь отправляет запрос, не указав, какое действие нужно выполнить.", () -> {
+            preparationRequest(VALID_TOKEN, "")
+                    .then()
+                    .statusCode(400)
+                    .body("result", equalTo("ERROR"));
+        });
     }
 
     @Test
     @DisplayName("TC2: Запрос без обязательного параметра token")
     @Severity(SeverityLevel.BLOCKER)
+    @Description("Система не обрабатывает запрос, если не указан токен.")
     public void testFailLoginWithoutToken() {
 
-        stubAuthSuccess(VALID_TOKEN);
-
-        preparationRequest("", LOGIN)
-                .then()
-                .statusCode(400)
-                .body("result", equalTo("ERROR"));
+        step("Пользователь отправляет запрос, не указав токен.", () -> {
+            preparationRequest("", LOGIN)
+                    .then()
+                    .statusCode(400)
+                    .body("result", equalTo("ERROR"));
+        });
     }
 
     @Test
-    @DisplayName("TC3: Запрос с неверным HTTP-методом (GET вместо POST)")
+    @DisplayName("TC3: Запрос с неверным HTTP-методом.")
     @Severity(SeverityLevel.BLOCKER)
+    @Description("Система не обрабатывает запрос, если указан неверным HTTP-методом (GET вместо POST).")
     public void testFailLoginInvalidMethod() {
 
-        stubAuthSuccess(VALID_TOKEN);
-
-        preparationRequestWithGET(VALID_TOKEN, LOGIN)
-                .then()
-                .statusCode(401)
-                .body("result", equalTo("ERROR"));
+        step("Пользователь отправляет запрос с HTTP-методом GET.", () -> {
+            preparationRequestWithGET(VALID_TOKEN, LOGIN)
+                    .then()
+                    .statusCode(401)
+                    .body("result", equalTo("ERROR"));
+        });
     }
 }

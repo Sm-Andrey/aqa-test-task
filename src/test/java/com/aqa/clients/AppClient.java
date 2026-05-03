@@ -17,7 +17,6 @@ public final class AppClient {
     private AppClient() {
     }
 
-    @Step("Отправляем API запрос с токеном и параметром действия")
     public static Response preparationRequest(String token, String action) {
         Response response = given()
                 .header("X-Api-Key", API_KEY)
@@ -32,7 +31,6 @@ public final class AppClient {
         return response;
     }
 
-    @Step("Отправляем API запрос с токеном и параметром действия, но без ключа")
     public static Response preparationRequestWithoutApiKey(String token, String action) {
         Response response = given()
                 .contentType("application/x-www-form-urlencoded")
